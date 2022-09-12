@@ -5,25 +5,35 @@
     <script>
       var key = '2530000206000119004900080902010X20621090010050210009069';
       var url =
-        'https://www.locationbox.com.tr/locationbox/services?Key=' +
+        'http://www.locationbox.com.tr/locationbox/services?Key=' +
         key +
         '&Cmd=Geocode&Typ=JSON&Address=';
 
       function Cozumle(d) {
         const resultlabel = document.getElementById('res');
         const adres = document.getElementById('Adres').value;
-        const obj = JSON.parse(httpGet(url + adres)); 
-		console.log(obj);
-		if(obj.geocode && obj.geocode.adr)
-		{
-		console.log(obj.geocode.adr);
-		resultlabel.innerHTML = JSON.stringify(obj.geocode.adr).replaceAll(",",",<br>");
-		}
-		else
-		{
-		resultlabel.innerHTML ="Adres Çözümlenemedi";
-		}
-		
+        fetch(url + adres)
+		  .then(response => response.json())
+		  .then(function (json) {
+									console.log(json);
+									const obj = JSON.parse(JSON.stringify(json));
+									console.log(obj);
+									if(obj.geocode && obj.geocode.adr)
+									{
+									console.log(obj.geocode.adr);
+									resultlabel.innerHTML = JSON.stringify(obj.geocode.adr).replaceAll(",",",<br>");
+									}
+									else
+									{
+									resultlabel.innerHTML ="Adres Çözümlenemedi";
+									}
+								}
+		  )
+          .catch(function (e) {
+			resultlabel.innerHTML ="Adres Çözümlenemedi";
+            console.log(e);
+          });
+        //  resultlabel.innerHTML = httpGet(url + adres).replaceAll(',', ',<br>');
       }
 
       function httpGet(theUrl) {
