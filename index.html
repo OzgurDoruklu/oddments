@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script>
+      var key = '2530000206000119004900080902010X20621090010050210009069';
+      var url =
+        'http://www.locationbox.com.tr/locationbox/services?Key=' +
+        key +
+        '&Cmd=Geocode&Typ=JSON&Address=';
+
+      function Cozumle(d) {
+        const resultlabel = document.getElementById('res');
+        const adres = document.getElementById('Adres').value;
+        const obj = JSON.parse(httpGet(url + adres)); 
+		console.log(obj);
+		if(obj.geocode && obj.geocode.adr)
+		{
+		console.log(obj.geocode.adr);
+		resultlabel.innerHTML = JSON.stringify(obj.geocode.adr).replaceAll(",",",<br>");
+		}
+		else
+		{
+		resultlabel.innerHTML ="Adres Çözümlenemedi";
+		}
+		
+      }
+
+      function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open('GET', theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+      }
+    </script>
+  </head>
+
+  <body>
+    <div id="app">
+      <label for="Adres">Adres giriniz.</label>
+      <br />
+      <textarea cols="50" rows="5" id="Adres"></textarea>
+      <br />
+      <button onclick="Cozumle(2)">Çözümle</button>
+      <br />
+      <label id="res" />
+    </div>
+  </body>
+</html>
