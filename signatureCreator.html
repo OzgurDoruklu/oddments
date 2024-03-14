@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      input,
+      textarea {
+        width: 100%;
+        font-size: 1.2rem;
+      }
+      label {
+        font-weight: bold;
+        font-size: 1.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <label for="url">Full URL:</label>
+    <input type="text" id="url" />
+    <br />
+    <br />
+    <label for="QString">Query String:</label>
+    <input type="text" id="qString" />
+    <br />
+    <br />
+    <label for="apiKey">API Key:</label>
+    <input type="text" id="apiKey" />
+    <br />
+    <br />
+    <label for="secretKey">Secret Key:</label>
+    <input type="text" id="secretKey" />
+    <br />
+    <br />
+    <label for="rndKey">Random Key:</label>
+    <input type="text" id="rndKey" />
+    <br />
+    <br />
+    <label for="reqBody">Request Body:</label>
+    <textarea rows="2" cols="50" id="reqBody"></textarea>
+    <br />
+    <br />
+    <br />
+    <label for="concatanatedString">Birleştirilmiş String:</label>
+    <h3 id="concatanatedString"></h3>
+    <br />
+    <br />
+    <label for="hashSha256">Sha256:</label>
+    <h3 id="hashSha256"></h3>
+    <br />
+    <br />
+    <label for="hashInBase64">Signature:</label>
+    <h3 id="hashInBase64"></h3>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script>
+    const fullUrl = document.getElementById('url');
+    const queryString = document.getElementById('qString');
+    const apiKey = document.getElementById('apiKey');
+    const secretKey = document.getElementById('secretKey');
+    const rndKey = document.getElementById('rndKey');
+    const reqBody = document.getElementById('reqBody');
+
+    function interpolate(str) {
+      return str.replace(/{{([^}]+)}}/g, function (match, $1) {
+        return pm.variables.get($1);
+      });
+    }
+
+    fullUrl.addEventListener('input', (e) => {
+      refreshResult();
+    });
+    queryString.addEventListener('input', (e) => {
+      refreshResult();
+    });
+    apiKey.addEventListener('input', (e) => {
+      refreshResult();
+    });
+    secretKey.addEventListener('input', (e) => {
+      refreshResult();
+    });
+    rndKey.addEventListener('input', (e) => {
+      refreshResult();
+    });
+    reqBody.addEventListener('input', (e) => {
+      refreshResult();
+    });
+
+    function refreshResult() {
+      var concatanatedString =
+        fullUrl.value +
+        queryString.value +
+        apiKey.value +
+        secretKey.value +
+        rndKey.value +
+        reqBody.value;
+      var hashSha256 = CryptoJS.SHA256(concatanatedString);
+      var hashInBase64 = CryptoJS.enc.Base64.stringify(hashSha256);
+
+      document.getElementById(
+        'concatanatedString'
+      ).innerHTML = concatanatedString;
+      document.getElementById('hashSha256').innerHTML = hashSha256;
+      document.getElementById(
+        'hashInBase64'
+      ).innerHTML = hashInBase64.toUpperCase();
+    }
+  </script>
+</html>
